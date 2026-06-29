@@ -94,14 +94,17 @@
             max-width: 1200px;
         }
 
-        /* Enterprise Sensor Cards (Matching Reference Image) */
+        /* Enterprise Sensor Cards */
         .card {
             background-color: var(--card-bg);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             width: 240px;
             text-align: center;
             transition: transform 0.2s ease-in-out, box-shadow 0.2s;
-            overflow: hidden; /* Keeps the top header inside the borders */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card:hover {
@@ -120,17 +123,17 @@
             transition: background-color 0.3s ease;
         }
 
-        /* Header Color States */
         .bg-dost { background-color: var(--dost-navy); }
         .bg-safe { background-color: var(--safe-green); }
         .bg-caution { background-color: var(--caution-yellow); }
         .bg-danger { background-color: var(--danger-red); }
 
         .card-body {
-            padding: 20px;
+            padding: 20px 20px 10px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            flex-grow: 1;
         }
 
         .card .value {
@@ -146,17 +149,15 @@
             color: var(--text-muted);
             font-weight: 500;
             margin-top: 5px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        /* Minimalist Icons for the bottom of the card */
         .card-icon {
             font-size: 24px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             opacity: 0.7;
         }
 
-        /* INDIVIDUAL CARD STATUS BADGES */
         .card-badge {
             display: inline-block;
             padding: 4px 15px;
@@ -166,6 +167,32 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             width: 80%;
+            margin-bottom: 15px;
+        }
+
+        /* NEW: Actionable Troubleshooting Text */
+        .action-text {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            color: var(--text-muted);
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-red);
+        }
+
+        .action-caution {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: #d68910;
         }
 
         /* System Status Footer */
@@ -184,7 +211,7 @@
 
     <div class="header">
         <h1>Air Quality & Temperature Monitoring</h1>
-        <p>Welcome! Let's Have Comfortable Workplace | Live Monitoring Dashboard</p>
+        <p>Live Edge-Computing Telemetry | DOST Evaluation Node</p>
         
         <div id="master-status" class="master-badge badge-waiting">
             Connecting to Node...
@@ -200,6 +227,7 @@
                 <div class="card-icon">🌫️</div>
                 <div class="card-badge badge-waiting" id="badge-pm25">WAITING</div>
             </div>
+            <div class="action-text" id="action-pm25">Connecting to sensor...</div>
         </div>
 
         <div class="card">
@@ -210,6 +238,7 @@
                 <div class="card-icon">💨</div>
                 <div class="card-badge badge-waiting" id="badge-co2">WAITING</div>
             </div>
+            <div class="action-text" id="action-co2">Connecting to sensor...</div>
         </div>
 
         <div class="card">
@@ -220,6 +249,7 @@
                 <div class="card-icon">☣️</div>
                 <div class="card-badge badge-waiting" id="badge-voc">WAITING</div>
             </div>
+            <div class="action-text" id="action-voc">Connecting to sensor...</div>
         </div>
 
         <div class="card">
@@ -230,6 +260,7 @@
                 <div class="card-icon">🌡️</div>
                 <div class="card-badge badge-waiting" id="badge-temp">WAITING</div>
             </div>
+            <div class="action-text" id="action-temp">Connecting to sensor...</div>
         </div>
 
         <div class="card">
@@ -240,6 +271,7 @@
                 <div class="card-icon">💧</div>
                 <div class="card-badge badge-waiting" id="badge-hum">WAITING</div>
             </div>
+            <div class="action-text" id="action-hum">Connecting to sensor...</div>
         </div>
     </div>
 
@@ -315,12 +347,15 @@
             const valElement = document.getElementById('val-' + sensorName);
             const headerElement = document.getElementById('header-' + sensorName);
             const badgeElement = document.getElementById('badge-' + sensorName);
+            const actionElement = document.getElementById('action-' + sensorName);
             
             if (!value) {
                 valElement.innerText = "--";
                 headerElement.className = 'card-header bg-dost';
                 badgeElement.className = 'card-badge badge-waiting';
                 badgeElement.innerText = "OFFLINE";
+                actionElement.className = 'action-text';
+                actionElement.innerText = "Please check ESP32 & wiring.";
                 return 0;
             }
 
@@ -331,16 +366,22 @@
                 headerElement.className = 'card-header bg-danger';
                 badgeElement.className = 'card-badge badge-danger';
                 badgeElement.innerText = "DANGER";
+                actionElement.className = 'action-text action-danger';
+                actionElement.innerText = "CRITICAL: Please check area!";
                 return 2; 
             } else if (numValue > limitObj.caution) {
                 headerElement.className = 'card-header bg-caution';
                 badgeElement.className = 'card-badge badge-caution';
                 badgeElement.innerText = "CAUTION";
+                actionElement.className = 'action-text action-caution';
+                actionElement.innerText = "Please monitor levels closely.";
                 return 1; 
             } else {
                 headerElement.className = 'card-header bg-safe';
                 badgeElement.className = 'card-badge badge-safe';
                 badgeElement.innerText = "SAFE";
+                actionElement.className = 'action-text';
+                actionElement.innerText = "System Normal. No action required.";
                 return 0; 
             }
         }
@@ -349,12 +390,15 @@
             const valElement = document.getElementById('val-' + sensorName);
             const headerElement = document.getElementById('header-' + sensorName);
             const badgeElement = document.getElementById('badge-' + sensorName);
+            const actionElement = document.getElementById('action-' + sensorName);
             
             if (!value) {
                 valElement.innerText = "--";
                 headerElement.className = 'card-header bg-dost';
                 badgeElement.className = 'card-badge badge-waiting';
                 badgeElement.innerText = "OFFLINE";
+                actionElement.className = 'action-text';
+                actionElement.innerText = "Please check ESP32 & wiring.";
                 return 0;
             }
 
@@ -365,16 +409,22 @@
                 headerElement.className = 'card-header bg-danger';
                 badgeElement.className = 'card-badge badge-danger';
                 badgeElement.innerText = "DANGER";
+                actionElement.className = 'action-text action-danger';
+                actionElement.innerText = "CRITICAL: Please check area!";
                 return 2;
             } else if (numValue > limitObj.caution) {
                 headerElement.className = 'card-header bg-caution';
                 badgeElement.className = 'card-badge badge-caution';
                 badgeElement.innerText = "CAUTION";
+                actionElement.className = 'action-text action-caution';
+                actionElement.innerText = "Please monitor levels closely.";
                 return 1;
             } else {
                 headerElement.className = 'card-header bg-safe';
                 badgeElement.className = 'card-badge badge-safe';
                 badgeElement.innerText = "SAFE";
+                actionElement.className = 'action-text';
+                actionElement.innerText = "System Normal. No action required.";
                 return 0;
             }
         }
