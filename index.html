@@ -9,197 +9,246 @@
 
     <style>
         :root {
-            /* High-Tech Dark Mode Palette */
-            --bg-deep: #050b14;
-            --card-glass: rgba(13, 25, 48, 0.65);
-            --border-glow: rgba(242, 169, 0, 0.3); /* DOST Gold glow */
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --dost-gold: #F2A900;
+            /* Enterprise Dark Mode Palette */
+            --bg-base: #121212;
+            --panel-bg: #1e1e1e;
+            --border-color: #2d2d2d;
+            --text-main: #e0e0e0;
+            --text-muted: #888888;
+            --dost-blue: #2196f3; /* Brightened for dark mode */
             
-            /* 3-Tier Status Colors */
-            --safe-green: #10b981;
-            --caution-yellow: #f59e0b;
-            --danger-red: #ef4444;
-            --waiting-gray: #475569;
+            /* Status Colors */
+            --status-safe: #4caf50;
+            --status-warn: #ff9800;
+            --status-danger: #f44336;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% 0%, #0d1e3b 0%, #050b14 70%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-base);
             color: var(--text-main);
             margin: 0;
-            padding: 0;
+            padding: 20px;
+        }
+
+        /* Top Navigation / Header (Matching Reference Image) */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .top-nav h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--dost-blue);
+        }
+
+        .top-nav .sub-tabs {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 20px;
+        }
+
+        .top-nav .sub-tabs span.active {
+            color: var(--text-main);
+            border-bottom: 2px solid var(--dost-blue);
+            padding-bottom: 5px;
+        }
+
+        /* Main Grid Layout */
+        .dashboard {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        /* Futuristic Header */
-        .header {
-            width: 100%;
-            padding: 30px 0 20px 0;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            background: linear-gradient(180deg, rgba(0, 40, 85, 0.8) 0%, rgba(5, 11, 20, 0) 100%);
+        /* Top Row: Metric Cards */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
         }
 
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-weight: 300;
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-        }
-
-        .header p {
-            margin: 8px 0 20px 0;
-            font-size: 13px;
-            color: var(--dost-gold);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* MASTER SYSTEM TAG */
-        .master-badge {
-            display: inline-block;
-            padding: 8px 30px;
-            font-size: 13px;
-            font-weight: 700;
+        .metric-card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .badge-safe { background-color: rgba(16, 185, 129, 0.1); color: var(--safe-green); border-color: var(--safe-green); }
-        .badge-caution { background-color: rgba(245, 158, 11, 0.1); color: var(--caution-yellow); border-color: var(--caution-yellow); }
-        .badge-danger { 
-            background-color: rgba(239, 68, 68, 0.2); 
-            color: #fff; 
-            border-color: var(--danger-red);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
-            animation: pulse-danger 1.5s infinite;
-        }
-        .badge-waiting { background-color: rgba(71, 85, 105, 0.2); color: var(--text-muted); border-color: var(--waiting-gray); }
-
-        @keyframes pulse-danger {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-
-        /* Telemetry Grid Layout */
-        .dashboard-container {
+            padding: 15px;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-            padding: 40px 20px;
-            max-width: 1300px;
-        }
-
-        /* Glassmorphism HUD Cards */
-        .card {
-            background: var(--card-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-top: 3px solid var(--waiting-gray);
-            border-radius: 12px;
-            width: 320px;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 15px var(--border-glow);
-            border-color: rgba(255,255,255,0.1);
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card-header {
-            padding: 18px 0 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-icon {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--dost-blue);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 18px;
+        }
+
+        .card-title {
             font-size: 14px;
             font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            margin-top: 10px;
         }
 
-        /* Dynamic Card Top Borders */
-        .status-safe { border-top-color: var(--safe-green); }
-        .status-caution { border-top-color: var(--caution-yellow); }
-        .status-danger { border-top-color: var(--danger-red); }
-
-        /* Gauge Container */
-        .gauge-container {
-            width: 100%;
-            height: 240px;
-            margin-top: -10px;
-        }
-
-        /* System Status Footer */
-        .timestamp {
+        .card-subtext {
             font-size: 11px;
             color: var(--text-muted);
-            margin-bottom: 40px;
-            padding: 10px 25px;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 30px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--dost-blue);
+            margin: 15px 0 10px 0;
+        }
+
+        /* Linear Progress Bars */
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background-color: #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--status-safe);
+            transition: width 0.5s ease, background-color 0.5s ease;
+        }
+
+        /* Bottom Row: Charts */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 15px;
+        }
+
+        .chart-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+        }
+
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .donut-container, .line-container {
+            width: 100%;
+            height: 300px;
+        }
+
+        /* System Info Footer */
+        .footer-info {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Air Quality Telemetry</h1>
-        <p>DOST Evaluation Node • Edge Computing</p>
-        
-        <div id="master-status" class="master-badge badge-waiting">
-            Establishing Link...
+    <div class="dashboard">
+        <div class="top-nav">
+            <h1>DOST Air Quality & Temp Monitoring</h1>
+            <div class="sub-tabs">
+                <span class="active">Overview</span>
+                <span>Metric Explorer</span>
+                <span>Configured Policies</span>
+            </div>
         </div>
+
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="card-header">
+                    <div class="card-icon">🌫️</div>
+                </div>
+                <div class="card-title">PM2.5 DUST</div>
+                <div class="card-subtext">Limit: 35 µg/m³</div>
+                <div class="card-value" id="val-pm25">--</div>
+                <div class="progress-track"><div class="progress-fill" id="bar-pm25"></div></div>
+            </div>
+
+            <div class="metric-card">
+                <div class="card-header">
+                    <div class="card-icon">💨</div>
+                </div>
+                <div class="card-title">TRUE CO2</div>
+                <div class="card-subtext">Limit: 1000 ppm</div>
+                <div class="card-value" id="val-co2">--</div>
+                <div class="progress-track"><div class="progress-fill" id="bar-co2"></div></div>
+            </div>
+
+            <div class="metric-card">
+                <div class="card-header">
+                    <div class="card-icon">☣️</div>
+                </div>
+                <div class="card-title">VOC LEVELS</div>
+                <div class="card-subtext">Limit: 400 Analog</div>
+                <div class="card-value" id="val-voc">--</div>
+                <div class="progress-track"><div class="progress-fill" id="bar-voc"></div></div>
+            </div>
+
+            <div class="metric-card">
+                <div class="card-header">
+                    <div class="card-icon">🌡️</div>
+                </div>
+                <div class="card-title">TEMPERATURE</div>
+                <div class="card-subtext">Optimal: 18-30 °C</div>
+                <div class="card-value" id="val-temp">--</div>
+                <div class="progress-track"><div class="progress-fill" id="bar-temp"></div></div>
+            </div>
+
+            <div class="metric-card">
+                <div class="card-header">
+                    <div class="card-icon">💧</div>
+                </div>
+                <div class="card-title">HUMIDITY</div>
+                <div class="card-subtext">Optimal: 40-65 %</div>
+                <div class="card-value" id="val-hum">--</div>
+                <div class="progress-track"><div class="progress-fill" id="bar-hum"></div></div>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="chart-panel">
+                <div class="chart-title">System Health & Availability</div>
+                <div id="donut-chart" class="donut-container"></div>
+            </div>
+            
+            <div class="chart-panel">
+                <div class="chart-title">Environmental Telemetry (Last 20 Readings)</div>
+                <div id="line-chart" class="line-container"></div>
+            </div>
+        </div>
+
+        <div class="footer-info" id="last-update">Last Poll: Waiting for data...</div>
     </div>
-
-    <div class="dashboard-container">
-        <div class="card" id="card-pm25">
-            <div class="card-header">PM2.5 DUST</div>
-            <div id="gauge-pm25" class="gauge-container"></div>
-        </div>
-
-        <div class="card" id="card-co2">
-            <div class="card-header">TRUE CO2</div>
-            <div id="gauge-co2" class="gauge-container"></div>
-        </div>
-
-        <div class="card" id="card-voc">
-            <div class="card-header">VOC LEVELS</div>
-            <div id="gauge-voc" class="gauge-container"></div>
-        </div>
-
-        <div class="card" id="card-temp">
-            <div class="card-header">TEMPERATURE</div>
-            <div id="gauge-temp" class="gauge-container"></div>
-        </div>
-
-        <div class="card" id="card-hum">
-            <div class="card-header">HUMIDITY</div>
-            <div id="gauge-hum" class="gauge-container"></div>
-        </div>
-    </div>
-
-    <div class="timestamp" id="last-update">Connecting to secure cloud server...</div>
 
     <script>
         // ==========================================
@@ -208,177 +257,170 @@
         const channelID = '3415500'; 
         
         const limits = {
-            pm25: { caution: 25, danger: 35 },
-            co2:  { caution: 800, danger: 1000 },
-            voc:  { caution: 300, danger: 400 },
-            temp: { min: 18, caution: 30, danger: 32 },
-            hum:  { min: 40, caution: 65, danger: 70 }
+            pm25: { max: 50, caution: 25, danger: 35 },
+            co2:  { max: 2000, caution: 800, danger: 1000 },
+            voc:  { max: 500, caution: 300, danger: 400 },
+            temp: { max: 50, caution: 30, danger: 32 },
+            hum:  { max: 100, caution: 65, danger: 70 }
         };
 
-        const charts = {};
+        // Initialize ECharts
+        const donutChart = echarts.init(document.getElementById('donut-chart'));
+        const lineChart = echarts.init(document.getElementById('line-chart'));
 
         // ==========================================
-        // HIGH-TECH ECHARTS GAUGE INITIALIZATION
+        // CHART CONFIGURATIONS
         // ==========================================
-        function initGauge(domId, unit, min, max, colorSplits) {
-            const chartDom = document.getElementById(domId);
-            const myChart = echarts.init(chartDom);
-            
-            const option = {
-                series: [
-                    {
-                        type: 'gauge',
-                        startAngle: 200,
-                        endAngle: -20,
-                        min: min,
-                        max: max,
-                        splitNumber: 5,
-                        itemStyle: {
-                            color: '#F2A900', // DOST Gold Needle
-                            shadowColor: 'rgba(242, 169, 0, 0.5)',
-                            shadowBlur: 10
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                width: 8, // Thinner, futuristic track
-                                color: colorSplits
-                            }
-                        },
-                        pointer: {
-                            icon: 'path://M2.9,0.7L2.9,0.7c1.4,0,2.6,1.2,2.6,2.6l0,38c0,0.1-0.1,0.2-0.2,0.2H0.5c-0.1,0-0.2-0.1-0.2-0.2l0-38C0.3,1.9,1.4,0.7,2.9,0.7z',
-                            length: '65%',
-                            width: 3,
-                            offsetCenter: [0, '-8%']
-                        },
-                        axisTick: {
-                            length: 6,
-                            lineStyle: { color: 'inherit', width: 1 }
-                        },
-                        splitLine: {
-                            length: 12,
-                            lineStyle: { color: 'inherit', width: 2 }
-                        },
-                        axisLabel: {
-                            color: '#64748b',
-                            fontSize: 10,
-                            distance: -20,
-                        },
-                        title: {
-                            offsetCenter: [0, '40%'],
-                            fontSize: 12,
-                            color: '#64748b',
-                            letterSpacing: 1
-                        },
-                        detail: {
-                            fontSize: 36,
-                            offsetCenter: [0, '15%'],
-                            valueAnimation: true,
-                            formatter: '{value}',
-                            color: '#ffffff',
-                            fontWeight: '300',
-                            textShadowColor: 'rgba(255,255,255,0.3)',
-                            textShadowBlur: 5
-                        },
-                        data: [
-                            { value: 0, name: unit }
-                        ]
-                    }
-                ]
-            };
-            
-            myChart.setOption(option);
-            return myChart;
-        }
-
-        window.onload = function() {
-            charts.pm25 = initGauge('gauge-pm25', 'µg/m³', 0, 50, [[0.5, '#10b981'], [0.7, '#f59e0b'], [1, '#ef4444']]);
-            charts.co2 = initGauge('gauge-co2', 'ppm', 0, 2000, [[0.4, '#10b981'], [0.5, '#f59e0b'], [1, '#ef4444']]);
-            charts.voc = initGauge('gauge-voc', 'Analog', 0, 500, [[0.6, '#10b981'], [0.8, '#f59e0b'], [1, '#ef4444']]);
-            charts.temp = initGauge('gauge-temp', '°C', 10, 50, [[0.2, '#ef4444'], [0.5, '#10b981'], [0.55, '#f59e0b'], [1, '#ef4444']]);
-            charts.hum = initGauge('gauge-hum', '% RH', 0, 100, [[0.4, '#ef4444'], [0.65, '#10b981'], [0.7, '#f59e0b'], [1, '#ef4444']]);
-            
-            fetchLiveData();
-            setInterval(fetchLiveData, 15000);
+        
+        // The Green "Device Availability" Donut
+        const donutOption = {
+            series: [{
+                type: 'gauge',
+                startAngle: 90,
+                endAngle: -270,
+                pointer: { show: false },
+                progress: {
+                    show: true,
+                    overlap: false,
+                    roundCap: true,
+                    clip: false,
+                    itemStyle: { color: '#4caf50' } // Safe Green
+                },
+                axisLine: { lineStyle: { width: 15, color: [[1, '#333']] } },
+                splitLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: { show: false },
+                data: [{ value: 100, name: 'SAFE', title: { offsetCenter: ['0%', '20%'], color: '#888', fontSize: 14 } }],
+                detail: { width: 50, height: 14, fontSize: 32, color: '#e0e0e0', formatter: '{value}%', offsetCenter: ['0%', '-10%'] }
+            }]
         };
+        donutChart.setOption(donutOption);
+
+        // The Multi-Line Historical Trend Graph
+        const lineOption = {
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['PM2.5', 'CO2 (Scaled)'], textStyle: { color: '#888' }, bottom: 0 },
+            grid: { left: '3%', right: '4%', bottom: '15%', top: '5%', containLabel: true },
+            xAxis: { type: 'category', boundaryGap: false, data: [], axisLabel: { color: '#888' } },
+            yAxis: { type: 'value', splitLine: { lineStyle: { color: '#333' } }, axisLabel: { color: '#888' } },
+            series: [
+                { name: 'PM2.5', type: 'line', smooth: true, itemStyle: { color: '#2196f3' }, data: [] },
+                { name: 'CO2 (Scaled)', type: 'line', smooth: true, itemStyle: { color: '#ff9800' }, data: [] }
+            ]
+        };
+        lineChart.setOption(lineOption);
 
         // ==========================================
-        // TELEMETRY FETCH & UPDATE LOGIC
+        // DATA FETCHING & UI UPDATE LOGIC
         // ==========================================
-        async function fetchLiveData() {
-            const url = `https://api.thingspeak.com/channels/${channelID}/feeds/last.json`;
+        async function fetchHistoricalData() {
+            // Fetch the last 20 results to build the historical line graph
+            const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?results=20`;
             
             try {
                 const response = await fetch(url);
                 const data = await response.json();
+                const feeds = data.feeds;
 
-                let threatLevel = 0;
+                if (feeds.length === 0) return;
 
-                threatLevel = Math.max(threatLevel, processCard('pm25', data.field2, limits.pm25));
-                threatLevel = Math.max(threatLevel, processCard('co2', data.field1, limits.co2));
-                threatLevel = Math.max(threatLevel, processCard('voc', data.field3, limits.voc));
-                threatLevel = Math.max(threatLevel, processCardMinMax('temp', data.field4, limits.temp));
-                threatLevel = Math.max(threatLevel, processCardMinMax('hum', data.field5, limits.hum));
+                // 1. UPDATE THE LINE GRAPH
+                const times = [];
+                const pm25Data = [];
+                const co2Data = [];
 
-                updateMasterTag(threatLevel);
+                feeds.forEach(feed => {
+                    const date = new Date(feed.created_at);
+                    times.push(date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+                    pm25Data.push(feed.field2 || 0);
+                    // Scale CO2 down by 10 so it fits nicely on the same graph as PM2.5
+                    co2Data.push((feed.field1 || 0) / 10); 
+                });
 
-                const date = new Date(data.created_at);
-                const timeStr = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-                document.getElementById('last-update').innerText = "LAST SYNC: " + timeStr + " | SYSTEM: ONLINE";
-                document.getElementById('last-update').style.color = "#10b981";
+                lineChart.setOption({
+                    xAxis: { data: times },
+                    series: [{ data: pm25Data }, { data: co2Data }]
+                });
+
+                // 2. UPDATE THE TOP CARDS (Using the absolute newest feed)
+                const latest = feeds[feeds.length - 1];
+                let highestThreat = 0; // 0=Safe, 1=Warn, 2=Danger
+
+                highestThreat = Math.max(highestThreat, updateProgressBar('pm25', latest.field2, limits.pm25));
+                highestThreat = Math.max(highestThreat, updateProgressBar('co2', latest.field1, limits.co2));
+                highestThreat = Math.max(highestThreat, updateProgressBar('voc', latest.field3, limits.voc));
+                highestThreat = Math.max(highestThreat, updateProgressBar('temp', latest.field4, limits.temp));
+                highestThreat = Math.max(highestThreat, updateProgressBar('hum', latest.field5, limits.hum));
+
+                // 3. UPDATE THE DONUT CHART
+                updateDonutChart(highestThreat);
+
+                // Update Timestamp
+                const lastDate = new Date(latest.created_at);
+                document.getElementById('last-update').innerText = "Last Poll: " + lastDate.toLocaleString();
 
             } catch (error) {
-                console.error("Telemetry link severed: ", error);
-                document.getElementById('last-update').innerText = "SYSTEM OFFLINE: AWAITING SENSOR DATA...";
-                document.getElementById('last-update').style.color = "#f59e0b";
-                updateMasterTag(-1); 
+                console.error("Cloud Error: ", error);
+                document.getElementById('last-update').innerText = "Last Poll: SYSTEM OFFLINE";
             }
         }
 
-        // ==========================================
-        // UI EVALUATION LOGIC
-        // ==========================================
-        function processCard(sensor, valStr, limitObj) {
-            const card = document.getElementById('card-' + sensor);
-            if(!valStr) return 0;
+        // Helper function for the horizontal bars
+        function updateProgressBar(sensor, valStr, limitObj) {
+            const valEl = document.getElementById('val-' + sensor);
+            const barEl = document.getElementById('bar-' + sensor);
             
+            if (!valStr) return 0;
             const val = parseFloat(valStr).toFixed(1);
-            charts[sensor].setOption({ series: [{ data: [{ value: val, name: charts[sensor].getOption().series[0].data[0].name }] }] });
-            
-            if(val > limitObj.danger) { card.className = 'card status-danger'; return 2; }
-            else if(val > limitObj.caution) { card.className = 'card status-caution'; return 1; }
-            else { card.className = 'card status-safe'; return 0; }
-        }
+            valEl.innerText = val;
 
-        function processCardMinMax(sensor, valStr, limitObj) {
-            const card = document.getElementById('card-' + sensor);
-            if(!valStr) return 0;
-            
-            const val = parseFloat(valStr).toFixed(1);
-            charts[sensor].setOption({ series: [{ data: [{ value: val, name: charts[sensor].getOption().series[0].data[0].name }] }] });
-            
-            if(val < limitObj.min || val > limitObj.danger) { card.className = 'card status-danger'; return 2; }
-            else if(val > limitObj.caution) { card.className = 'card status-caution'; return 1; }
-            else { card.className = 'card status-safe'; return 0; }
-        }
+            // Calculate width percentage
+            let percent = (val / limitObj.max) * 100;
+            if (percent > 100) percent = 100;
+            barEl.style.width = percent + '%';
 
-        function updateMasterTag(level) {
-            const tag = document.getElementById('master-status');
-            tag.className = 'master-badge'; 
-
-            if (level === 2) {
-                tag.classList.add('badge-danger');
-                tag.innerText = "CRITICAL: EVACUATE";
-            } else if (level === 1) {
-                tag.classList.add('badge-caution');
-                tag.innerText = "WARNING: ELEVATED";
-            } else if (level === 0) {
-                tag.classList.add('badge-safe');
-                tag.innerText = "SYSTEM NOMINAL";
+            // Determine color and threat level
+            if (val > limitObj.danger) {
+                barEl.style.backgroundColor = 'var(--status-danger)';
+                valEl.style.color = 'var(--status-danger)';
+                return 2;
+            } else if (val > limitObj.caution) {
+                barEl.style.backgroundColor = 'var(--status-warn)';
+                valEl.style.color = 'var(--status-warn)';
+                return 1;
             } else {
-                tag.classList.add('badge-waiting');
-                tag.innerText = "SENSORS OFFLINE";
+                barEl.style.backgroundColor = 'var(--status-safe)';
+                valEl.style.color = 'var(--dost-blue)';
+                return 0;
             }
         }
+
+        // Update the Donut based on overall threat
+        function updateDonutChart(threat) {
+            let color = '#4caf50'; // Green
+            let label = 'SAFE';
+            let score = 100;
+
+            if (threat === 2) { color = '#f44336'; label = 'DANGER'; score = 25; }
+            else if (threat === 1) { color = '#ff9800'; label = 'WARN'; score = 65; }
+
+            donutChart.setOption({
+                series: [{
+                    data: [{ value: score, name: label, title: { color: '#888' } }],
+                    progress: { itemStyle: { color: color } }
+                }]
+            });
+        }
+
+        // Make charts responsive
+        window.addEventListener('resize', function() {
+            donutChart.resize();
+            lineChart.resize();
+        });
+
+        // Initialize and loop every 15 seconds
+        fetchHistoricalData();
+        setInterval(fetchHistoricalData, 15000);
     </script>
 </body>
 </html>
