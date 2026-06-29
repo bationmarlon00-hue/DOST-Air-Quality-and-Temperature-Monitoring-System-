@@ -9,7 +9,7 @@
             /* DOST Official Color Palette */
             --dost-navy: #002855;
             --dost-gold: #F2A900;
-            --bg-color: #f4f6f9;
+            --bg-color: #eef2f5;
             --card-bg: #ffffff;
             --text-main: #333333;
             --text-muted: #6c757d;
@@ -18,6 +18,7 @@
             --safe-green: #28a745;
             --caution-yellow: #f39c12;
             --danger-red: #dc3545;
+            --waiting-gray: #6c757d;
         }
 
         body {
@@ -36,22 +37,22 @@
             background-color: var(--dost-navy);
             color: white;
             width: 100%;
-            padding: 30px 0 20px 0;
+            padding: 25px 0 15px 0;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
             border-bottom: 5px solid var(--dost-gold);
         }
 
         .header h1 {
             margin: 0;
-            font-size: 26px;
+            font-size: 24px;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
         .header p {
             margin: 8px 0 15px 0;
-            font-size: 15px;
+            font-size: 14px;
             color: #d1d8e0;
         }
 
@@ -59,7 +60,7 @@
         .master-badge {
             display: inline-block;
             padding: 8px 25px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             border-radius: 30px;
             text-transform: uppercase;
@@ -75,6 +76,7 @@
             color: white; 
             animation: pulse-bg 1.5s infinite;
         }
+        .badge-waiting { background-color: var(--waiting-gray); color: white; }
 
         @keyframes pulse-bg {
             0% { transform: scale(1); }
@@ -87,59 +89,89 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 25px;
-            padding: 40px 20px;
+            gap: 20px;
+            padding: 30px 20px;
             max-width: 1200px;
         }
 
-        /* Individual Sensor Cards */
+        /* Enterprise Sensor Cards (Matching Reference Image) */
         .card {
             background-color: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            width: 220px;
-            padding: 25px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 240px;
             text-align: center;
-            border-top: 5px solid var(--dost-navy);
             transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+            overflow: hidden; /* Keeps the top header inside the borders */
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
         }
 
-        .card h2 {
-            font-size: 15px;
-            color: var(--text-muted);
+        /* Solid Color Block Headers */
+        .card-header {
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Header Color States */
+        .bg-dost { background-color: var(--dost-navy); }
+        .bg-safe { background-color: var(--safe-green); }
+        .bg-caution { background-color: var(--caution-yellow); }
+        .bg-danger { background-color: var(--danger-red); }
+
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card .value {
-            font-size: 46px;
+            font-size: 42px;
             font-weight: bold;
-            color: var(--dost-navy);
-            margin: 15px 0;
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.1;
         }
 
         .card .unit {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-muted);
             font-weight: 500;
+            margin-top: 5px;
+            margin-bottom: 15px;
         }
 
-        /* Card Dynamic Borders */
-        .status-safe { border-top-color: var(--safe-green); }
-        .status-caution { border-top-color: var(--caution-yellow); }
-        .status-danger { border-top-color: var(--danger-red); }
+        /* Minimalist Icons for the bottom of the card */
+        .card-icon {
+            font-size: 24px;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        /* INDIVIDUAL CARD STATUS BADGES */
+        .card-badge {
+            display: inline-block;
+            padding: 4px 15px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 80%;
+        }
 
         /* System Status Footer */
         .timestamp {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
-            margin-top: 10px;
             margin-bottom: 40px;
             padding: 10px 20px;
             background: white;
@@ -151,43 +183,63 @@
 <body>
 
     <div class="header">
-        <h1>Air Quality & Temperature Monitoring System</h1>
+        <h1>Air Quality & Temperature Monitoring</h1>
         <p>Live Edge-Computing Telemetry | DOST Evaluation Node</p>
         
-        <div id="master-status" class="master-badge badge-safe">
-            Connecting...
+        <div id="master-status" class="master-badge badge-waiting">
+            Connecting to Node...
         </div>
     </div>
 
     <div class="dashboard-container">
-        <div class="card" id="card-pm25">
-            <h2>PM2.5 DUST</h2>
-            <div class="value" id="val-pm25">--</div>
-            <div class="unit">µg/m³</div>
+        <div class="card">
+            <div class="card-header bg-dost" id="header-pm25">PM2.5 DUST</div>
+            <div class="card-body">
+                <div class="value" id="val-pm25">--</div>
+                <div class="unit">µg/m³</div>
+                <div class="card-icon">🌫️</div>
+                <div class="card-badge badge-waiting" id="badge-pm25">WAITING</div>
+            </div>
         </div>
 
-        <div class="card" id="card-co2">
-            <h2>TRUE CO2</h2>
-            <div class="value" id="val-co2">--</div>
-            <div class="unit">ppm</div>
+        <div class="card">
+            <div class="card-header bg-dost" id="header-co2">TRUE CO2</div>
+            <div class="card-body">
+                <div class="value" id="val-co2">--</div>
+                <div class="unit">ppm</div>
+                <div class="card-icon">💨</div>
+                <div class="card-badge badge-waiting" id="badge-co2">WAITING</div>
+            </div>
         </div>
 
-        <div class="card" id="card-voc">
-            <h2>VOC Levels</h2>
-            <div class="value" id="val-voc">--</div>
-            <div class="unit">Raw Analog</div>
+        <div class="card">
+            <div class="card-header bg-dost" id="header-voc">VOC LEVELS</div>
+            <div class="card-body">
+                <div class="value" id="val-voc">--</div>
+                <div class="unit">Raw Analog</div>
+                <div class="card-icon">☣️</div>
+                <div class="card-badge badge-waiting" id="badge-voc">WAITING</div>
+            </div>
         </div>
 
-        <div class="card" id="card-temp">
-            <h2>TEMPERATURE</h2>
-            <div class="value" id="val-temp">--</div>
-            <div class="unit">°C</div>
+        <div class="card">
+            <div class="card-header bg-dost" id="header-temp">TEMPERATURE</div>
+            <div class="card-body">
+                <div class="value" id="val-temp">--</div>
+                <div class="unit">°C</div>
+                <div class="card-icon">🌡️</div>
+                <div class="card-badge badge-waiting" id="badge-temp">WAITING</div>
+            </div>
         </div>
 
-        <div class="card" id="card-hum">
-            <h2>HUMIDITY</h2>
-            <div class="value" id="val-hum">--</div>
-            <div class="unit">% RH</div>
+        <div class="card">
+            <div class="card-header bg-dost" id="header-hum">HUMIDITY</div>
+            <div class="card-body">
+                <div class="value" id="val-hum">--</div>
+                <div class="unit">% RH</div>
+                <div class="card-icon">💧</div>
+                <div class="card-badge badge-waiting" id="badge-hum">WAITING</div>
+            </div>
         </div>
     </div>
 
@@ -197,11 +249,8 @@
         // ==========================================
         // SYSTEM CONFIGURATION
         // ==========================================
-        
-        // Hardcoded ThingSpeak Channel ID
         const channelID = '3415500'; 
         
-        // 3-Tier Safety Thresholds
         const limits = {
             pm25: { caution: 25, danger: 35 },
             co2:  { caution: 800, danger: 1000 },
@@ -213,7 +262,6 @@
         // ==========================================
         // TELEMETRY FETCH LOGIC
         // ==========================================
-
         async function fetchLiveData() {
             const url = `https://api.thingspeak.com/channels/${channelID}/feeds/last.json`;
             
@@ -221,39 +269,32 @@
                 const response = await fetch(url);
                 const data = await response.json();
 
-                // Track overall system threat level (0=Safe, 1=Caution, 2=Danger)
                 let systemThreatLevel = 0;
 
-                // Field Mapping & Threat Evaluation
                 systemThreatLevel = Math.max(systemThreatLevel, updateCard('co2', data.field1, limits.co2));
                 systemThreatLevel = Math.max(systemThreatLevel, updateCard('pm25', data.field2, limits.pm25));
                 systemThreatLevel = Math.max(systemThreatLevel, updateCard('voc', data.field3, limits.voc));
                 systemThreatLevel = Math.max(systemThreatLevel, updateCardWithMinMax('temp', data.field4, limits.temp));
                 systemThreatLevel = Math.max(systemThreatLevel, updateCardWithMinMax('hum', data.field5, limits.hum));
 
-                // Update Master System Tag
                 updateMasterTag(systemThreatLevel);
 
-                // Update System Timestamp
                 const date = new Date(data.created_at);
                 document.getElementById('last-update').innerText = "Last Synchronized: " + date.toLocaleTimeString() + " | Status: ONLINE";
-                document.getElementById('last-update').style.color = "var(--safe-green)";
 
             } catch (error) {
                 console.error("Telemetry link severed: ", error);
                 document.getElementById('last-update').innerText = "WAITING FOR DATA: Prototype is offline or warming up.";
-                document.getElementById('last-update').style.color = "var(--caution-yellow)";
-                updateMasterTag(-1); // Set to offline state
+                updateMasterTag(-1); 
             }
         }
 
         // ==========================================
         // UI UPDATE LOGIC
         // ==========================================
-
         function updateMasterTag(threatLevel) {
             const tag = document.getElementById('master-status');
-            tag.className = 'master-badge'; // reset classes
+            tag.className = 'master-badge'; 
 
             if (threatLevel === 2) {
                 tag.classList.add('badge-danger');
@@ -265,64 +306,79 @@
                 tag.classList.add('badge-safe');
                 tag.innerText = "🟢 SYSTEM SAFE: OPTIMAL";
             } else {
-                tag.classList.add('badge-caution');
+                tag.classList.add('badge-waiting');
                 tag.innerText = "⚪ SENSOR OFFLINE";
             }
         }
 
         function updateCard(sensorName, value, limitObj) {
             const valElement = document.getElementById('val-' + sensorName);
-            const cardElement = document.getElementById('card-' + sensorName);
+            const headerElement = document.getElementById('header-' + sensorName);
+            const badgeElement = document.getElementById('badge-' + sensorName);
             
             if (!value) {
                 valElement.innerText = "--";
-                cardElement.className = 'card';
-                return 0; // Return safe threat level if no data
+                headerElement.className = 'card-header bg-dost';
+                badgeElement.className = 'card-badge badge-waiting';
+                badgeElement.innerText = "OFFLINE";
+                return 0;
             }
 
             const numValue = parseFloat(value).toFixed(1);
             valElement.innerText = numValue;
 
-            // Evaluate 3-Tier Logic
             if (numValue > limitObj.danger) {
-                cardElement.className = 'card status-danger';
-                return 2; // Danger
+                headerElement.className = 'card-header bg-danger';
+                badgeElement.className = 'card-badge badge-danger';
+                badgeElement.innerText = "DANGER";
+                return 2; 
             } else if (numValue > limitObj.caution) {
-                cardElement.className = 'card status-caution';
-                return 1; // Caution
+                headerElement.className = 'card-header bg-caution';
+                badgeElement.className = 'card-badge badge-caution';
+                badgeElement.innerText = "CAUTION";
+                return 1; 
             } else {
-                cardElement.className = 'card status-safe';
-                return 0; // Safe
+                headerElement.className = 'card-header bg-safe';
+                badgeElement.className = 'card-badge badge-safe';
+                badgeElement.innerText = "SAFE";
+                return 0; 
             }
         }
 
         function updateCardWithMinMax(sensorName, value, limitObj) {
             const valElement = document.getElementById('val-' + sensorName);
-            const cardElement = document.getElementById('card-' + sensorName);
+            const headerElement = document.getElementById('header-' + sensorName);
+            const badgeElement = document.getElementById('badge-' + sensorName);
             
             if (!value) {
                 valElement.innerText = "--";
-                cardElement.className = 'card';
+                headerElement.className = 'card-header bg-dost';
+                badgeElement.className = 'card-badge badge-waiting';
+                badgeElement.innerText = "OFFLINE";
                 return 0;
             }
 
             const numValue = parseFloat(value).toFixed(1);
             valElement.innerText = numValue;
 
-            // Evaluate 3-Tier Logic (Min/Max ranges)
             if (numValue < limitObj.min || numValue > limitObj.danger) {
-                cardElement.className = 'card status-danger';
+                headerElement.className = 'card-header bg-danger';
+                badgeElement.className = 'card-badge badge-danger';
+                badgeElement.innerText = "DANGER";
                 return 2;
             } else if (numValue > limitObj.caution) {
-                cardElement.className = 'card status-caution';
+                headerElement.className = 'card-header bg-caution';
+                badgeElement.className = 'card-badge badge-caution';
+                badgeElement.innerText = "CAUTION";
                 return 1;
             } else {
-                cardElement.className = 'card status-safe';
+                headerElement.className = 'card-header bg-safe';
+                badgeElement.className = 'card-badge badge-safe';
+                badgeElement.innerText = "SAFE";
                 return 0;
             }
         }
 
-        // Initialize first fetch, then poll every 15 seconds
         fetchLiveData();
         setInterval(fetchLiveData, 15000);
     </script>
