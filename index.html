@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Quality & Temperature Monitoring System</title>
-    
-    <!-- Load Apache ECharts Library -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
-
     <style>
         :root {
             /* DOST Official Color Palette */
@@ -98,16 +94,14 @@
             max-width: 1200px;
         }
 
-        /* Enterprise Sensor Cards */
+        /* Enterprise Sensor Cards (Matching Reference Image) */
         .card {
             background-color: var(--card-bg);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            width: 320px;
-            border-radius: 8px;
+            width: 240px;
             text-align: center;
             transition: transform 0.2s ease-in-out, box-shadow 0.2s;
-            overflow: hidden;
-            border-top: 5px solid var(--dost-navy);
+            overflow: hidden; /* Keeps the top header inside the borders */
         }
 
         .card:hover {
@@ -115,19 +109,63 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.15);
         }
 
+        /* Solid Color Block Headers */
         .card-header {
-            padding: 15px 0 5px 0;
+            padding: 12px 0;
             font-size: 16px;
             font-weight: bold;
-            color: var(--dost-navy);
+            color: white;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: background-color 0.3s ease;
         }
 
-        /* Gauge Container */
-        .gauge-container {
-            width: 100%;
-            height: 250px;
+        /* Header Color States */
+        .bg-dost { background-color: var(--dost-navy); }
+        .bg-safe { background-color: var(--safe-green); }
+        .bg-caution { background-color: var(--caution-yellow); }
+        .bg-danger { background-color: var(--danger-red); }
+
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card .value {
+            font-size: 42px;
+            font-weight: bold;
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .card .unit {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* Minimalist Icons for the bottom of the card */
+        .card-icon {
+            font-size: 24px;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        /* INDIVIDUAL CARD STATUS BADGES */
+        .card-badge {
+            display: inline-block;
+            padding: 4px 15px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 80%;
         }
 
         /* System Status Footer */
@@ -145,7 +183,7 @@
 <body>
 
     <div class="header">
-        <h1>Air Quality & Temperature Monitoring System</h1>
+        <h1>Air Quality & Temperature Monitoring</h1>
         <p>Live Edge-Computing Telemetry | DOST Evaluation Node</p>
         
         <div id="master-status" class="master-badge badge-waiting">
@@ -154,30 +192,54 @@
     </div>
 
     <div class="dashboard-container">
-        <!-- Cards with EChart Containers -->
         <div class="card">
-            <div class="card-header">PM2.5 DUST</div>
-            <div id="gauge-pm25" class="gauge-container"></div>
+            <div class="card-header bg-dost" id="header-pm25">PM2.5 DUST</div>
+            <div class="card-body">
+                <div class="value" id="val-pm25">--</div>
+                <div class="unit">µg/m³</div>
+                <div class="card-icon">🌫️</div>
+                <div class="card-badge badge-waiting" id="badge-pm25">WAITING</div>
+            </div>
         </div>
 
         <div class="card">
-            <div class="card-header">TRUE CO2</div>
-            <div id="gauge-co2" class="gauge-container"></div>
+            <div class="card-header bg-dost" id="header-co2">TRUE CO2</div>
+            <div class="card-body">
+                <div class="value" id="val-co2">--</div>
+                <div class="unit">ppm</div>
+                <div class="card-icon">💨</div>
+                <div class="card-badge badge-waiting" id="badge-co2">WAITING</div>
+            </div>
         </div>
 
         <div class="card">
-            <div class="card-header">VOC LEVELS</div>
-            <div id="gauge-voc" class="gauge-container"></div>
+            <div class="card-header bg-dost" id="header-voc">VOC LEVELS</div>
+            <div class="card-body">
+                <div class="value" id="val-voc">--</div>
+                <div class="unit">Raw Analog</div>
+                <div class="card-icon">☣️</div>
+                <div class="card-badge badge-waiting" id="badge-voc">WAITING</div>
+            </div>
         </div>
 
         <div class="card">
-            <div class="card-header">TEMPERATURE</div>
-            <div id="gauge-temp" class="gauge-container"></div>
+            <div class="card-header bg-dost" id="header-temp">TEMPERATURE</div>
+            <div class="card-body">
+                <div class="value" id="val-temp">--</div>
+                <div class="unit">°C</div>
+                <div class="card-icon">🌡️</div>
+                <div class="card-badge badge-waiting" id="badge-temp">WAITING</div>
+            </div>
         </div>
 
         <div class="card">
-            <div class="card-header">HUMIDITY</div>
-            <div id="gauge-hum" class="gauge-container"></div>
+            <div class="card-header bg-dost" id="header-hum">HUMIDITY</div>
+            <div class="card-body">
+                <div class="value" id="val-hum">--</div>
+                <div class="unit">% RH</div>
+                <div class="card-icon">💧</div>
+                <div class="card-badge badge-waiting" id="badge-hum">WAITING</div>
+            </div>
         </div>
     </div>
 
@@ -189,7 +251,6 @@
         // ==========================================
         const channelID = '3415500'; 
         
-        // Define Thresholds for Master Tag Logic
         const limits = {
             pm25: { caution: 25, danger: 35 },
             co2:  { caution: 800, danger: 1000 },
@@ -198,98 +259,8 @@
             hum:  { min: 40, caution: 65, danger: 70 }
         };
 
-        // Chart instances dictionary
-        const charts = {};
-
         // ==========================================
-        // ECHARTS GAUGE INITIALIZATION
-        // ==========================================
-        function initGauge(domId, unit, min, max, colorSplits) {
-            const chartDom = document.getElementById(domId);
-            const myChart = echarts.init(chartDom);
-            
-            const option = {
-                series: [
-                    {
-                        type: 'gauge',
-                        startAngle: 180,
-                        endAngle: 0,
-                        min: min,
-                        max: max,
-                        splitNumber: 4,
-                        itemStyle: {
-                            color: '#002855' // DOST Navy Needle
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                width: 25,
-                                color: colorSplits // The Green/Yellow/Red track
-                            }
-                        },
-                        pointer: {
-                            icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
-                            length: '55%',
-                            width: 8,
-                            offsetCenter: [0, '-15%']
-                        },
-                        axisTick: {
-                            length: 12,
-                            lineStyle: { color: 'auto', width: 2 }
-                        },
-                        splitLine: {
-                            length: 25,
-                            lineStyle: { color: 'auto', width: 5 }
-                        },
-                        axisLabel: {
-                            color: '#464646',
-                            fontSize: 12,
-                            distance: -40,
-                        },
-                        title: {
-                            offsetCenter: [0, '35%'],
-                            fontSize: 14,
-                            color: '#6c757d'
-                        },
-                        detail: {
-                            fontSize: 32,
-                            offsetCenter: [0, '0%'],
-                            valueAnimation: true,
-                            formatter: '{value}',
-                            color: 'inherit',
-                            fontWeight: 'bold'
-                        },
-                        data: [
-                            {
-                                value: 0,
-                                name: unit
-                            }
-                        ]
-                    }
-                ]
-            };
-            
-            myChart.setOption(option);
-            return myChart;
-        }
-
-        // Initialize all dials when the page loads
-        window.onload = function() {
-            // Color Splits: [Percentage of track, Color]
-            charts.pm25 = initGauge('gauge-pm25', 'µg/m³', 0, 50, [[0.5, '#28a745'], [0.7, '#f39c12'], [1, '#dc3545']]);
-            charts.co2 = initGauge('gauge-co2', 'ppm', 0, 2000, [[0.4, '#28a745'], [0.5, '#f39c12'], [1, '#dc3545']]);
-            charts.voc = initGauge('gauge-voc', 'Analog', 0, 500, [[0.6, '#28a745'], [0.8, '#f39c12'], [1, '#dc3545']]);
-            
-            // Min/Max thresholds require specific split logic
-            charts.temp = initGauge('gauge-temp', '°C', 10, 50, [[0.2, '#dc3545'], [0.5, '#28a745'], [0.55, '#f39c12'], [1, '#dc3545']]);
-            charts.hum = initGauge('gauge-hum', '% RH', 0, 100, [[0.4, '#dc3545'], [0.65, '#28a745'], [0.7, '#f39c12'], [1, '#dc3545']]);
-            
-            // Start fetching data immediately
-            fetchLiveData();
-            setInterval(fetchLiveData, 15000);
-        };
-
-        // ==========================================
-        // TELEMETRY FETCH & UPDATE LOGIC
+        // TELEMETRY FETCH LOGIC
         // ==========================================
         async function fetchLiveData() {
             const url = `https://api.thingspeak.com/channels/${channelID}/feeds/last.json`;
@@ -298,52 +269,16 @@
                 const response = await fetch(url);
                 const data = await response.json();
 
-                let threatLevel = 0;
+                let systemThreatLevel = 0;
 
-                // Update PM2.5
-                if(data.field2) {
-                    const val = parseFloat(data.field2).toFixed(1);
-                    charts.pm25.setOption({ series: [{ data: [{ value: val, name: 'µg/m³' }] }] });
-                    if(val > limits.pm25.danger) threatLevel = Math.max(threatLevel, 2);
-                    else if(val > limits.pm25.caution) threatLevel = Math.max(threatLevel, 1);
-                }
+                systemThreatLevel = Math.max(systemThreatLevel, updateCard('co2', data.field1, limits.co2));
+                systemThreatLevel = Math.max(systemThreatLevel, updateCard('pm25', data.field2, limits.pm25));
+                systemThreatLevel = Math.max(systemThreatLevel, updateCard('voc', data.field3, limits.voc));
+                systemThreatLevel = Math.max(systemThreatLevel, updateCardWithMinMax('temp', data.field4, limits.temp));
+                systemThreatLevel = Math.max(systemThreatLevel, updateCardWithMinMax('hum', data.field5, limits.hum));
 
-                // Update CO2
-                if(data.field1) {
-                    const val = parseFloat(data.field1).toFixed(1);
-                    charts.co2.setOption({ series: [{ data: [{ value: val, name: 'ppm' }] }] });
-                    if(val > limits.co2.danger) threatLevel = Math.max(threatLevel, 2);
-                    else if(val > limits.co2.caution) threatLevel = Math.max(threatLevel, 1);
-                }
+                updateMasterTag(systemThreatLevel);
 
-                // Update VOC
-                if(data.field3) {
-                    const val = parseFloat(data.field3).toFixed(1);
-                    charts.voc.setOption({ series: [{ data: [{ value: val, name: 'Analog' }] }] });
-                    if(val > limits.voc.danger) threatLevel = Math.max(threatLevel, 2);
-                    else if(val > limits.voc.caution) threatLevel = Math.max(threatLevel, 1);
-                }
-
-                // Update Temperature
-                if(data.field4) {
-                    const val = parseFloat(data.field4).toFixed(1);
-                    charts.temp.setOption({ series: [{ data: [{ value: val, name: '°C' }] }] });
-                    if(val < limits.temp.min || val > limits.temp.danger) threatLevel = Math.max(threatLevel, 2);
-                    else if(val > limits.temp.caution) threatLevel = Math.max(threatLevel, 1);
-                }
-
-                // Update Humidity
-                if(data.field5) {
-                    const val = parseFloat(data.field5).toFixed(1);
-                    charts.hum.setOption({ series: [{ data: [{ value: val, name: '% RH' }] }] });
-                    if(val < limits.hum.min || val > limits.hum.danger) threatLevel = Math.max(threatLevel, 2);
-                    else if(val > limits.hum.caution) threatLevel = Math.max(threatLevel, 1);
-                }
-
-                // Update Master Tag
-                updateMasterTag(threatLevel);
-
-                // Update Timestamp
                 const date = new Date(data.created_at);
                 document.getElementById('last-update').innerText = "Last Synchronized: " + date.toLocaleTimeString() + " | Status: ONLINE";
 
@@ -355,19 +290,19 @@
         }
 
         // ==========================================
-        // MASTER TAG UI UPDATE
+        // UI UPDATE LOGIC
         // ==========================================
-        function updateMasterTag(level) {
+        function updateMasterTag(threatLevel) {
             const tag = document.getElementById('master-status');
             tag.className = 'master-badge'; 
 
-            if (level === 2) {
+            if (threatLevel === 2) {
                 tag.classList.add('badge-danger');
                 tag.innerText = "🔴 DANGER: EVACUATE / VENTILATE";
-            } else if (level === 1) {
+            } else if (threatLevel === 1) {
                 tag.classList.add('badge-caution');
                 tag.innerText = "🟡 CAUTION: ELEVATED LEVELS";
-            } else if (level === 0) {
+            } else if (threatLevel === 0) {
                 tag.classList.add('badge-safe');
                 tag.innerText = "🟢 SYSTEM SAFE: OPTIMAL";
             } else {
@@ -375,6 +310,77 @@
                 tag.innerText = "⚪ SENSOR OFFLINE";
             }
         }
+
+        function updateCard(sensorName, value, limitObj) {
+            const valElement = document.getElementById('val-' + sensorName);
+            const headerElement = document.getElementById('header-' + sensorName);
+            const badgeElement = document.getElementById('badge-' + sensorName);
+            
+            if (!value) {
+                valElement.innerText = "--";
+                headerElement.className = 'card-header bg-dost';
+                badgeElement.className = 'card-badge badge-waiting';
+                badgeElement.innerText = "OFFLINE";
+                return 0;
+            }
+
+            const numValue = parseFloat(value).toFixed(1);
+            valElement.innerText = numValue;
+
+            if (numValue > limitObj.danger) {
+                headerElement.className = 'card-header bg-danger';
+                badgeElement.className = 'card-badge badge-danger';
+                badgeElement.innerText = "DANGER";
+                return 2; 
+            } else if (numValue > limitObj.caution) {
+                headerElement.className = 'card-header bg-caution';
+                badgeElement.className = 'card-badge badge-caution';
+                badgeElement.innerText = "CAUTION";
+                return 1; 
+            } else {
+                headerElement.className = 'card-header bg-safe';
+                badgeElement.className = 'card-badge badge-safe';
+                badgeElement.innerText = "SAFE";
+                return 0; 
+            }
+        }
+
+        function updateCardWithMinMax(sensorName, value, limitObj) {
+            const valElement = document.getElementById('val-' + sensorName);
+            const headerElement = document.getElementById('header-' + sensorName);
+            const badgeElement = document.getElementById('badge-' + sensorName);
+            
+            if (!value) {
+                valElement.innerText = "--";
+                headerElement.className = 'card-header bg-dost';
+                badgeElement.className = 'card-badge badge-waiting';
+                badgeElement.innerText = "OFFLINE";
+                return 0;
+            }
+
+            const numValue = parseFloat(value).toFixed(1);
+            valElement.innerText = numValue;
+
+            if (numValue < limitObj.min || numValue > limitObj.danger) {
+                headerElement.className = 'card-header bg-danger';
+                badgeElement.className = 'card-badge badge-danger';
+                badgeElement.innerText = "DANGER";
+                return 2;
+            } else if (numValue > limitObj.caution) {
+                headerElement.className = 'card-header bg-caution';
+                badgeElement.className = 'card-badge badge-caution';
+                badgeElement.innerText = "CAUTION";
+                return 1;
+            } else {
+                headerElement.className = 'card-header bg-safe';
+                badgeElement.className = 'card-badge badge-safe';
+                badgeElement.innerText = "SAFE";
+                return 0;
+            }
+        }
+
+        fetchLiveData();
+        setInterval(fetchLiveData, 15000);
     </script>
 </body>
 </html>
